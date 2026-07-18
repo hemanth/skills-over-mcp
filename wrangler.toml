@@ -1,9 +1,9 @@
-name = "mcpskill"
+name = "skills-over-mcp"
 main = "src/worker.ts"
 compatibility_date = "2026-07-18"
 compatibility_flags = ["nodejs_compat"]
 
-# Custom domain: mcpskill.h3manth.com (configured via CF API)
+# Custom domain: skills-over-mcp.h3manth.com (configured via CF API)
 
 [assets]
 directory = "./public"

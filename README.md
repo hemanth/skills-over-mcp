@@ -1,4 +1,4 @@
-# mcp-skills
+# skills-over-mcp
 
 Skills over MCP — agent workflows as standard MCP resources with a `skill://` URI scheme.
 
@@ -45,7 +45,7 @@ skills/
 npm run deploy
 ```
 
-Deploys to Cloudflare Workers as a self-contained worker with embedded skill content. Live at `https://mcpskill.h3manth.com`.
+Deploys to Cloudflare Workers as a self-contained worker with embedded skill content. Live at `https://skills-over-mcp.h3manth.com`.
 
 ## Architecture
 
