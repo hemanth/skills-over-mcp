@@ -22,6 +22,28 @@ Open `http://localhost:3000`, type what you need ("deploy to production", "revie
 
 `skill://index.json` returns the discovery index. `skill://git-workflow/SKILL.md` returns the full skill. Skills reference tools by name; the UI renders inline tool panels.
 
+## Why skills, not just tools?
+
+**Discovery model.** `tools/list` returns full schemas for every tool, all loaded into the LLM context at once. There is no `tools/read`. Resources have a two-step fetch: `resources/list` returns lightweight metadata, then `resources/read` loads one resource on demand. Skills use this to get lazy loading without new protocol primitives.
+
+```
+tools/list     →  [full schema A, full schema B, ...]   // all in context
+resources/list →  [name A, name B, ...]                  // just the index
+resources/read →  full content of A                      // one at a time
+```
+
+**But wouldn't tool search or progressive tool loading solve this?** It would fix the *discovery* problem (finding the right tool from hundreds). But skills solve a different problem: *process knowledge*.
+
+A tool says `create_branch(branch_name: string)`. A skill says:
+
+- Name it `<type>/<ticket>-<slug>`, not whatever you want
+- Always branch from `main` unless the ticket says otherwise
+- Run `run_tests` before pushing
+- If integration tests fail but your change is frontend-only, that's acceptable
+- Open a PR using this specific template
+
+That's team knowledge that doesn't fit in a tool schema. Even with perfect tool discovery, the agent still needs to know *how your team uses those tools together*. Skills encode that multi-step, conditional, opinionated workflow. Tools are the verbs; skills are the playbook.
+
 ## Skills included
 
 ```

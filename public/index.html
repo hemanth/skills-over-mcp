@@ -200,6 +200,81 @@
       color: var(--ink-muted);
     }
 
+    .explainer {
+      margin: 0 auto 28px;
+      max-width: 520px;
+      text-align: left;
+    }
+
+    .explainer summary {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      padding: 8px 0;
+      list-style: none;
+    }
+
+    .explainer summary::-webkit-details-marker { display: none; }
+
+    .explainer summary::before {
+      content: '+ ';
+      color: var(--accent);
+      font-family: var(--mono);
+      font-weight: 700;
+    }
+
+    .explainer[open] summary::before { content: '- '; }
+
+    .explainer-body {
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      font-size: 13px;
+      color: var(--ink-2);
+      line-height: 1.65;
+      margin-top: 4px;
+    }
+
+    .explainer-body p { margin: 0 0 10px; }
+    .explainer-body p:last-child { margin: 0; }
+
+    .explainer-body strong { color: var(--ink); font-weight: 600; }
+
+    .explainer-body code {
+      font-family: var(--mono);
+      font-size: 0.9em;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: var(--bg-raised);
+      color: var(--accent);
+    }
+
+    .explainer-body pre {
+      margin: 8px 0;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-2);
+      line-height: 1.5;
+    }
+
+    .explainer-body ul {
+      padding-left: 18px;
+      margin: 6px 0;
+    }
+
+    .explainer-body li {
+      margin-bottom: 3px;
+    }
+
+    .explainer-body li::marker { color: var(--ink-muted); }
+
     .landing-features {
       display: flex;
       gap: 1px;
@@ -835,6 +910,26 @@
         <span>/</span>
         <a href="https://github.com/hemanth/skills-over-mcp" target="_blank">This repo</a>
       </div>
+
+      <details class="explainer">
+        <summary>Why skills, not just tools?</summary>
+        <div class="explainer-body">
+          <p><strong>Discovery.</strong> <code>tools/list</code> returns full schemas for every tool, all loaded into context at once. There is no <code>tools/read</code>. Resources have a two-step fetch: <code>resources/list</code> returns lightweight metadata, then <code>resources/read</code> loads one on demand.</p>
+<pre>tools/list     = [full schema A, B, C, ...]   // all in context
+resources/list = [name A, name B, name C, ...] // just the index
+resources/read = full content of A             // one at a time</pre>
+          <p><strong>Wouldn't tool search or progressive loading solve this?</strong> That fixes the discovery problem (finding the right tool). But skills solve a different problem: process knowledge.</p>
+          <p>A tool says <code>create_branch(name)</code>. A skill says:</p>
+          <ul>
+            <li>Name it <code>&lt;type&gt;/&lt;ticket&gt;-&lt;slug&gt;</code></li>
+            <li>Always branch from <code>main</code> unless the ticket says otherwise</li>
+            <li>Run <code>run_tests</code> before pushing</li>
+            <li>If integration tests fail but your change is frontend-only, that's acceptable</li>
+            <li>Open a PR using this specific template</li>
+          </ul>
+          <p>That's team knowledge. Even with perfect tool discovery, the agent needs to know <strong>how your team uses those tools together</strong>. Tools are the verbs. Skills are the playbook.</p>
+        </div>
+      </details>
 
       <div class="landing-features" id="features">
         <div class="landing-feat">
