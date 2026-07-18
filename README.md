@@ -18,14 +18,7 @@ Open `http://localhost:3000`, type what you need ("deploy to production", "revie
 
 ## How it works
 
-```
-Browser → Web Bridge (:3000) → MCP Server (:3001)
-              ↕                      ↕
-      REST API bridge        StreamableHTTPTransport
-              ↕                      ↕
-    Cloudflare Workers AI     skill:// resources
-    (Llama 4 Scout 17B)       + tools (create_branch, run_tests)
-```
+![architecture](./architecture.jpg)
 
 `skill://index.json` returns the discovery index. `skill://git-workflow/SKILL.md` returns the full skill. Skills reference tools by name; the UI renders inline tool panels.
 
@@ -63,7 +56,8 @@ Deploys to Cloudflare Workers as a self-contained worker with embedded skill con
 
 ## Related
 
-- [SEP-2640: Skills Over MCP](https://github.com/nichochar/skills-over-mcp), the proposal
+- [Skills Over MCP Spec](https://github.com/nichochar/skills-over-mcp), SEP-2640
+- [experimental-ext-skills](https://github.com/nichochar/experimental-ext-skills), the Interest Group repo
 - [MCP SDK](https://github.com/modelcontextprotocol/typescript-sdk), protocol implementation
 
 ## License

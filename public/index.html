@@ -161,9 +161,43 @@
       font-size: 15px;
       color: var(--ink-2);
       max-width: 480px;
-      margin: 0 auto 32px;
+      margin: 0 auto 24px;
       line-height: 1.55;
       text-wrap: pretty;
+    }
+
+    .landing-arch {
+      margin: 0 auto 24px;
+      max-width: 520px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .landing-arch img {
+      width: 100%;
+      display: block;
+    }
+
+    .landing-links {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 28px;
+      font-size: 12px;
+    }
+
+    .landing-links a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .landing-links a:hover { text-decoration: underline; }
+
+    .landing-links span {
+      color: var(--ink-muted);
     }
 
     .landing-features {
@@ -789,6 +823,18 @@
         Type your intent below and an LLM routes you to the matching skill,
         then walks you through it with live tool execution.
       </p>
+
+      <div class="landing-arch">
+        <img src="/architecture.jpg" alt="Architecture diagram showing Browser, Web Bridge, MCP Server, Cloudflare Worker, and Llama 4 Scout">
+      </div>
+
+      <div class="landing-links">
+        <a href="https://github.com/nichochar/skills-over-mcp" target="_blank">SEP-2640 Spec</a>
+        <span>/</span>
+        <a href="https://github.com/nichochar/experimental-ext-skills" target="_blank">Interest Group</a>
+        <span>/</span>
+        <a href="https://github.com/hemanth/skills-over-mcp" target="_blank">This repo</a>
+      </div>
 
       <div class="landing-features" id="features">
         <div class="landing-feat">
