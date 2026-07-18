@@ -56,8 +56,8 @@ Deploys to Cloudflare Workers as a self-contained worker with embedded skill con
 
 ## Related
 
-- [Skills Over MCP Spec](https://github.com/nichochar/skills-over-mcp), SEP-2640
-- [experimental-ext-skills](https://github.com/nichochar/experimental-ext-skills), the Interest Group repo
+- [Skills Over MCP Spec](https://github.com/modelcontextprotocol/skills-over-mcp), SEP-2640
+- [experimental-ext-skills](https://github.com/modelcontextprotocol/experimental-ext-skills), the Interest Group repo
 - [MCP SDK](https://github.com/modelcontextprotocol/typescript-sdk), protocol implementation
 
 ## License
