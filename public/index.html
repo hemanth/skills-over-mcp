@@ -53,88 +53,14 @@
 
     /* ═══ Layout ══════════════════════════════════════════ */
     .shell {
-      max-width: 720px;
+      max-width: 840px;
       margin: 0 auto;
-      padding: 0 20px 100px;
-    }
-
-    /* ═══ Header ══════════════════════════════════════════ */
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      margin: 0 -20px 0;
-      position: sticky;
-      top: 0;
-      background: oklch(0.13 0.015 260 / 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      z-index: 10;
-    }
-
-    .header-mark {
-      width: 24px;
-      height: 24px;
-      border-radius: 6px;
-      background: var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .header-mark svg {
-      width: 14px;
-      height: 14px;
-      fill: none;
-      stroke: oklch(1 0 0);
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .header-title {
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    .header-sep {
-      width: 1px;
-      height: 14px;
-      background: var(--border);
-    }
-
-    .header-badge {
-      font-size: 10px;
-      font-weight: 600;
-      padding: 2px 7px;
-      border-radius: 4px;
-      background: var(--accent-dim);
-      color: var(--accent);
-      letter-spacing: 0.02em;
-    }
-
-    .header-spacer { flex: 1; }
-
-    .header-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: var(--ink-muted);
-    }
-
-    .header-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--success);
+      padding: 0 32px 120px;
     }
 
     /* ═══ Landing ═════════════════════════════════════════ */
     .landing {
-      padding: 64px 0 48px;
+      padding: 80px 0 60px;
       text-align: center;
       transition: opacity 300ms var(--ease);
     }
@@ -144,11 +70,11 @@
     }
 
     .landing-heading {
-      font-size: 32px;
+      font-size: 38px;
       font-weight: 800;
       letter-spacing: -0.03em;
-      line-height: 1.15;
-      margin-bottom: 12px;
+      line-height: 1.12;
+      margin-bottom: 16px;
       color: var(--ink);
       text-wrap: balance;
     }
@@ -158,17 +84,17 @@
     }
 
     .landing-sub {
-      font-size: 15px;
+      font-size: 16px;
       color: var(--ink-2);
-      max-width: 480px;
-      margin: 0 auto 24px;
-      line-height: 1.55;
+      max-width: 520px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
       text-wrap: pretty;
     }
 
     .landing-arch {
-      margin: 0 auto 24px;
-      max-width: 520px;
+      margin: 0 auto 28px;
+      max-width: 580px;
       border-radius: 10px;
       border: 1px solid var(--border);
       overflow: hidden;
@@ -276,19 +202,19 @@
     .explainer-body li::marker { color: var(--ink-muted); }
 
     .landing-features {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 1px;
       background: var(--border);
       border-radius: 10px;
       overflow: hidden;
-      margin-bottom: 36px;
+      margin-bottom: 40px;
     }
 
     .landing-feat {
-      flex: 1;
-      padding: 16px 14px;
+      padding: 20px 18px;
       background: var(--bg-surface);
-      text-align: center;
+      text-align: left;
     }
 
     .landing-feat-label {
@@ -301,7 +227,7 @@
     }
 
     .landing-feat-value {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--ink);
     }
@@ -860,10 +786,10 @@
     .tl-body a:hover { text-decoration: underline; }
 
     @media (max-width: 540px) {
-      .shell { padding: 0 16px 80px; }
-      .landing { padding: 40px 0 32px; }
-      .landing-heading { font-size: 24px; }
-      .landing-features { flex-direction: column; }
+      .shell { padding: 0 20px 80px; }
+      .landing { padding: 48px 0 36px; }
+      .landing-heading { font-size: 28px; }
+      .landing-features { grid-template-columns: 1fr 1fr; }
       .tool-panel { flex-direction: column; align-items: stretch; }
       .tool-input { min-width: auto; }
       .tl-date { width: 62px; font-size: 10px; }
@@ -871,21 +797,6 @@
   </style>
 </head>
 <body>
-  <!-- Sticky header -->
-  <header class="header">
-    <div class="header-mark">
-      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-    </div>
-    <span class="header-title">Skills Over MCP</span>
-    <span class="header-sep"></span>
-    <span class="header-badge">SEP-2640</span>
-    <div class="header-spacer"></div>
-    <div class="header-status">
-      <span class="header-dot"></span>
-      <span id="statusText">Connecting</span>
-    </div>
-  </header>
-
   <div class="shell">
     <!-- Landing -->
     <section class="landing" id="landing">
@@ -1216,7 +1127,6 @@ resources/read = full content of A             // one at a time</pre>
         tools = t || [];
         log('init', `${skills.length} skills, ${tools.length} tools`);
 
-        document.getElementById('statusText').textContent = 'Connected';
         document.getElementById('skillCount').textContent = skills.length;
         document.getElementById('toolCount').textContent = tools.length;
 
@@ -1225,8 +1135,7 @@ resources/read = full content of A             // one at a time</pre>
         input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
         input.focus();
       } catch (e) {
-        document.getElementById('statusText').textContent = 'Offline';
-        document.querySelector('.header-dot').style.background = 'var(--danger)';
+        log('error', 'Failed to connect');
       }
     }
 
