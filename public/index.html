@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills Over MCP</title>
+  <meta name="description" content="Interactive skill runner for Skills Over MCP (SEP-2640)">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --bg: oklch(0.13 0.015 260);
+      --bg-surface: oklch(0.17 0.015 260);
+      --bg-raised: oklch(0.21 0.018 260);
+      --bg-input: oklch(0.15 0.012 260);
+      --border: oklch(0.28 0.01 260);
+      --border-focus: oklch(0.55 0.14 260);
+      --ink: oklch(0.93 0.01 260);
+      --ink-2: oklch(0.72 0.015 260);
+      --ink-muted: oklch(0.50 0.01 260);
+      --accent: oklch(0.65 0.18 260);
+      --accent-dim: oklch(0.30 0.08 260);
+      --success: oklch(0.72 0.16 155);
+      --success-dim: oklch(0.25 0.06 155);
+      --warn: oklch(0.78 0.14 80);
+      --warn-dim: oklch(0.28 0.06 80);
+      --danger: oklch(0.70 0.17 25);
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --dur: 200ms;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ═══ Layout ══════════════════════════════════════════ */
+    .shell {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 20px 100px;
+    }
+
+    /* ═══ Header ══════════════════════════════════════════ */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      margin: 0 -20px 0;
+      position: sticky;
+      top: 0;
+      background: oklch(0.13 0.015 260 / 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+
+    .header-mark {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-mark svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: oklch(1 0 0);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .header-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .header-sep {
+      width: 1px;
+      height: 14px;
+      background: var(--border);
+    }
+
+    .header-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+
+    .header-spacer { flex: 1; }
+
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+
+    .header-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+
+    /* ═══ Landing ═════════════════════════════════════════ */
+    .landing {
+      padding: 64px 0 48px;
+      text-align: center;
+      transition: opacity 300ms var(--ease);
+    }
+
+    .landing.hidden {
+      display: none;
+    }
+
+    .landing-heading {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+
+    .landing-heading span {
+      color: var(--accent);
+    }
+
+    .landing-sub {
+      font-size: 15px;
+      color: var(--ink-2);
+      max-width: 480px;
+      margin: 0 auto 32px;
+      line-height: 1.55;
+      text-wrap: pretty;
+    }
+
+    .landing-features {
+      display: flex;
+      gap: 1px;
+      background: var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 36px;
+    }
+
+    .landing-feat {
+      flex: 1;
+      padding: 16px 14px;
+      background: var(--bg-surface);
+      text-align: center;
+    }
+
+    .landing-feat-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      margin-bottom: 4px;
+    }
+
+    .landing-feat-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* ═══ Command ═════════════════════════════════════════ */
+    .command {
+      position: relative;
+      max-width: 560px;
+      margin: 0 auto 16px;
+    }
+
+    .command-input {
+      width: 100%;
+      padding: 14px 18px;
+      padding-left: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: 14px;
+      outline: none;
+      transition: border-color var(--dur) var(--ease),
+                  box-shadow var(--dur) var(--ease);
+    }
+
+    .command-input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px oklch(0.55 0.14 260 / 0.12);
+    }
+
+    .command-input::placeholder { color: var(--ink-muted); }
+
+    .command-chevron {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 700;
+      pointer-events: none;
+      font-family: var(--mono);
+    }
+
+    .command-status {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      display: none;
+    }
+
+    .command-status.visible { display: block; }
+    .command-status.thinking { color: var(--accent); }
+    .command-status.matched { color: var(--success); }
+    .command-status.error { color: var(--danger); }
+
+    .quick-actions {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .quick-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      color: var(--ink-2);
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--dur) var(--ease);
+    }
+
+    .quick-btn:hover {
+      border-color: var(--border-focus);
+      color: var(--ink);
+      background: var(--bg-raised);
+    }
+
+    .quick-btn:active { transform: scale(0.97); }
+
+    /* ═══ Workflow ═════════════════════════════════════════ */
+    .workflow {
+      display: none;
+      animation: slideUp 300ms var(--ease);
+      margin-top: 32px;
+    }
+
+    .workflow.visible { display: block; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .wf-header {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .wf-name {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .wf-uri {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-muted);
+    }
+
+    .wf-progress {
+      height: 2px;
+      background: var(--bg-raised);
+      border-radius: 1px;
+      margin: 12px 0 20px;
+      overflow: hidden;
+    }
+
+    .wf-progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 1px;
+      transition: width 400ms var(--ease);
+      width: 0%;
+    }
+
+    /* ═══ Step ═════════════════════════════════════════════ */
+    .step {
+      padding: 14px 18px;
+      margin-bottom: 6px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: transparent;
+      transition: all var(--dur) var(--ease);
+    }
+
+    .step.current {
+      border-color: var(--border);
+      background: var(--bg-surface);
+    }
+
+    .step.done { opacity: 0.45; }
+
+    .step-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-num {
+      width: 22px; height: 22px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--bg-raised);
+      color: var(--ink-muted);
+      flex-shrink: 0;
+      transition: all var(--dur) var(--ease);
+    }
+
+    .step.current .step-num {
+      background: var(--accent);
+      color: oklch(1 0 0);
+    }
+
+    .step.done .step-num {
+      background: var(--success-dim);
+      color: var(--success);
+    }
+
+    .step-title {
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: -0.01em;
+    }
+
+    .step-check {
+      color: var(--success);
+      font-size: 12px;
+      margin-left: 4px;
+    }
+
+    .step-body {
+      margin-top: 10px;
+      margin-left: 32px;
+      font-size: 13px;
+      color: var(--ink-2);
+      line-height: 1.65;
+    }
+
+    .step-body ul, .step-body ol { padding-left: 18px; margin: 6px 0; }
+    .step-body li { margin-bottom: 3px; }
+    .step-body li::marker { color: var(--ink-muted); }
+    .step-body strong { color: var(--ink); font-weight: 600; }
+    .step-body a { color: var(--accent); text-decoration: none; }
+    .step-body a:hover { text-decoration: underline; }
+
+    .step-body code {
+      font-family: var(--mono);
+      font-size: 0.9em;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: var(--bg-raised);
+      color: var(--accent);
+    }
+
+    .step-body pre {
+      margin: 8px 0;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .step-body pre code {
+      padding: 0; background: none; color: var(--ink-2); font-size: 12px;
+    }
+
+    .step-body blockquote {
+      margin: 8px 0;
+      padding: 8px 14px;
+      border-left: 2px solid var(--warn);
+      background: var(--warn-dim);
+      border-radius: 0 6px 6px 0;
+      font-size: 12px;
+    }
+
+    .step-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0;
+      font-size: 12px;
+    }
+
+    .step-body th {
+      text-align: left;
+      padding: 6px 10px;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    .step-body td {
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      color: var(--ink-2);
+    }
+
+    /* ═══ Tool panel ══════════════════════════════════════ */
+    .tool-panel {
+      margin: 10px 0 4px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tool-name {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .tool-input {
+      flex: 1;
+      min-width: 140px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 12px;
+      outline: none;
+      transition: border-color var(--dur) var(--ease);
+    }
+
+    .tool-input:focus { border-color: var(--border-focus); }
+    .tool-input::placeholder { color: var(--ink-muted); }
+
+    .tool-run {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: none;
+      background: var(--accent);
+      color: oklch(1 0 0);
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--dur) var(--ease);
+    }
+
+    .tool-run:hover { filter: brightness(1.1); }
+    .tool-run:active { transform: scale(0.97); }
+    .tool-run:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .tool-result {
+      width: 100%;
+      margin-top: 6px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 12px;
+      animation: slideUp 200ms var(--ease);
+    }
+
+    .tool-result.ok { background: var(--success-dim); color: var(--success); }
+    .tool-result.err { background: oklch(0.25 0.06 25); color: var(--danger); }
+
+    /* ═══ Nav ═════════════════════════════════════════════ */
+    .step-nav {
+      margin-top: 10px;
+      margin-left: 32px;
+      display: flex;
+      gap: 6px;
+    }
+
+    .nav-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--ink-2);
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--dur) var(--ease);
+    }
+
+    .nav-btn:hover { border-color: var(--border-focus); color: var(--ink); }
+
+    .nav-btn.primary {
+      background: var(--accent);
+      border-color: transparent;
+      color: oklch(1 0 0);
+    }
+
+    .nav-btn.primary:hover { filter: brightness(1.1); }
+
+    /* ═══ Ref ═════════════════════════════════════════════ */
+    .ref-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin: 6px 0;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--accent);
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--dur) var(--ease);
+    }
+
+    .ref-btn:hover { border-color: var(--border-focus); background: var(--bg-raised); }
+
+    .ref-body {
+      display: none;
+      margin: 6px 0;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 13px;
+      color: var(--ink-2);
+      line-height: 1.6;
+      animation: slideUp 200ms var(--ease);
+    }
+
+    .ref-body.open { display: block; }
+    .ref-body h1, .ref-body h2, .ref-body h3 { color: var(--ink); margin: 10px 0 4px; font-size: 14px; }
+    .ref-body h1:first-child, .ref-body h2:first-child { margin-top: 0; }
+    .ref-body ul { padding-left: 18px; margin: 4px 0; }
+
+    /* ═══ Complete ════════════════════════════════════════ */
+    .complete {
+      text-align: center;
+      padding: 48px 20px;
+      animation: slideUp 300ms var(--ease);
+    }
+
+    .complete-icon {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--success-dim);
+      color: var(--success);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .complete h2 { font-size: 16px; font-weight: 700; }
+    .complete p { color: var(--ink-2); font-size: 13px; margin-top: 4px; }
+
+    .complete .again-btn {
+      margin-top: 16px;
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--ink-2);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--dur) var(--ease);
+    }
+
+    .complete .again-btn:hover { border-color: var(--border-focus); color: var(--ink); }
+
+    /* ═══ Log ═════════════════════════════════════════════ */
+    .log {
+      margin-top: 32px;
+      display: none;
+    }
+
+    .log.visible { display: block; }
+
+    .log-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+      margin-bottom: 6px;
+    }
+
+    .log-list {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      overflow: hidden;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .log-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-family: var(--mono);
+      border-bottom: 1px solid oklch(0.22 0.01 260);
+    }
+
+    .log-row:last-child { border-bottom: none; }
+    .log-t { color: var(--ink-muted); flex-shrink: 0; }
+    .log-m { color: var(--accent); font-weight: 600; flex-shrink: 0; }
+    .log-d { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--bg-raised); border-radius: 2px; }
+
+    @media (max-width: 540px) {
+      .shell { padding: 0 16px 80px; }
+      .landing { padding: 40px 0 32px; }
+      .landing-heading { font-size: 24px; }
+      .landing-features { flex-direction: column; }
+      .tool-panel { flex-direction: column; align-items: stretch; }
+      .tool-input { min-width: auto; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky header -->
+  <header class="header">
+    <div class="header-mark">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    </div>
+    <span class="header-title">Skills Over MCP</span>
+    <span class="header-sep"></span>
+    <span class="header-badge">SEP-2640</span>
+    <div class="header-spacer"></div>
+    <div class="header-status">
+      <span class="header-dot"></span>
+      <span id="statusText">Connecting</span>
+    </div>
+  </header>
+
+  <div class="shell">
+    <!-- Landing -->
+    <section class="landing" id="landing">
+      <h1 class="landing-heading">
+        Describe what you need.<br>
+        The right <span>skill</span> runs.
+      </h1>
+      <p class="landing-sub">
+        Skills are step-by-step agent workflows served as MCP resources.
+        Type your intent below and an LLM routes you to the matching skill,
+        then walks you through it with live tool execution.
+      </p>
+
+      <div class="landing-features" id="features">
+        <div class="landing-feat">
+          <div class="landing-feat-label">Transport</div>
+          <div class="landing-feat-value">Streamable HTTP</div>
+        </div>
+        <div class="landing-feat">
+          <div class="landing-feat-label">Router</div>
+          <div class="landing-feat-value">Llama 4 Scout</div>
+        </div>
+        <div class="landing-feat">
+          <div class="landing-feat-label">Skills</div>
+          <div class="landing-feat-value" id="skillCount">--</div>
+        </div>
+        <div class="landing-feat">
+          <div class="landing-feat-label">Tools</div>
+          <div class="landing-feat-value" id="toolCount">--</div>
+        </div>
+      </div>
+
+      <div class="command">
+        <span class="command-chevron">&gt;</span>
+        <input type="text" class="command-input" id="cmdInput"
+          placeholder="deploy to production, review this PR, create a branch..."
+          autocomplete="off" disabled>
+        <span class="command-status" id="cmdStatus"></span>
+      </div>
+
+      <div class="quick-actions" id="quickActions">
+        <button class="quick-btn" onclick="go('set up a feature branch')">Create branch</button>
+        <button class="quick-btn" onclick="go('review this pull request')">Code review</button>
+        <button class="quick-btn" onclick="go('deploy to production')">Deploy service</button>
+      </div>
+    </section>
+
+    <!-- Workflow -->
+    <div class="workflow" id="workflow"></div>
+
+    <!-- Log -->
+    <div class="log" id="logSection">
+      <div class="log-label">Activity</div>
+      <div class="log-list" id="logList"></div>
+    </div>
+  </div>
+
+  <script>
+    const AI_URL = 'https://ai-proxy.hemanthhm.workers.dev';
+    const AI_MODEL = '@cf/meta/llama-4-scout-17b-16e-instruct';
+
+    let skills = [], tools = [], activeSkill = null, stepIdx = 0, steps = [];
+    let busy = false;
+
+    const api = async p => { const r = await fetch('/api/' + p); if (!r.ok) throw new Error(r.status); return r.json(); };
+    const post = async (p, b) => { const r = await fetch('/api/' + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) }); if (!r.ok) throw new Error(r.status); return r.json(); };
+
+    function log(m, d) {
+      document.getElementById('logSection').classList.add('visible');
+      const list = document.getElementById('logList');
+      const t = new Date().toLocaleTimeString('en-US', { hour12: false });
+      const row = document.createElement('div');
+      row.className = 'log-row';
+      row.innerHTML = `<span class="log-t">${t}</span><span class="log-m">${m}</span><span class="log-d">${d}</span>`;
+      list.prepend(row);
+      while (list.children.length > 30) list.removeChild(list.lastChild);
+    }
+
+    async function classify(text) {
+      const list = skills.map(s => `- "${s.name}": ${s.description}`).join('\n');
+      const r = await fetch(AI_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: AI_MODEL,
+          messages: [
+            { role: 'system', content: `You are a skill router. Reply with ONLY the exact skill name that best matches. No quotes, no explanation.\n\nSkills:\n${list}\n\nIf none match, reply "none".` },
+            { role: 'user', content: text }
+          ],
+          stream: false
+        })
+      });
+      if (!r.ok) throw new Error(`AI ${r.status}`);
+      const d = await r.json();
+      return (d.result?.response || d.response || '').trim().toLowerCase();
+    }
+
+    function parse(md) {
+      const clean = md.replace(/^---\n[\s\S]*?\n---\n/, '');
+      const secs = [];
+      let cur = null;
+      for (const ln of clean.split('\n')) {
+        if (ln.startsWith('## ')) {
+          if (cur) secs.push(cur);
+          cur = { title: ln.slice(3), body: [] };
+        } else if (cur) cur.body.push(ln);
+      }
+      if (cur) secs.push(cur);
+      const tNames = tools.map(t => t.name);
+      return secs.map(s => {
+        const txt = s.body.join('\n');
+        return {
+          title: s.title, md: txt.trim(),
+          tools: tNames.filter(n => txt.includes('`' + n + '`') || txt.toLowerCase().includes(n)),
+          refs: [...txt.matchAll(/skill:\/\/[^\s)]+/g)].map(m => m[0]),
+        };
+      });
+    }
+
+    async function go(text) {
+      const input = document.getElementById('cmdInput');
+      if (text) input.value = text;
+      const val = input.value.trim();
+      if (!val || busy) return;
+
+      busy = true;
+      setStatus('thinking', 'Matching...');
+
+      try {
+        log('ai/classify', val);
+        const name = await classify(val);
+        log('ai/result', name);
+
+        const match = skills.find(s => name.includes(s.name) || s.name.includes(name));
+        if (!match) {
+          setStatus('error', 'No match');
+          setTimeout(() => setStatus(), 2000);
+          busy = false;
+          return;
+        }
+
+        setStatus('matched', match.name);
+        document.getElementById('landing').classList.add('hidden');
+
+        log('resources/read', match.url);
+        const res = await api('resource?uri=' + encodeURIComponent(match.url));
+        activeSkill = match;
+        stepIdx = 0;
+        steps = parse(res.text || '');
+        render();
+      } catch (e) {
+        log('error', e.message);
+        setStatus('error', 'Error');
+        setTimeout(() => setStatus(), 2000);
+      } finally {
+        busy = false;
+      }
+    }
+
+    function setStatus(cls, text) {
+      const el = document.getElementById('cmdStatus');
+      el.className = 'command-status' + (cls ? ' visible ' + cls : '');
+      el.textContent = text || '';
+    }
+
+    function render() {
+      const wf = document.getElementById('workflow');
+
+      if (stepIdx >= steps.length && steps.length > 0) {
+        wf.classList.add('visible');
+        wf.innerHTML = `<div class="complete">
+          <div class="complete-icon">ok</div>
+          <h2>Workflow complete</h2>
+          <p>${steps.length} steps of ${activeSkill?.name} finished.</p>
+          <button class="again-btn" onclick="stepIdx=0;render()">Run again</button>
+        </div>`;
+        return;
+      }
+
+      const pct = steps.length ? Math.round((Math.min(stepIdx, steps.length) / steps.length) * 100) : 0;
+      let h = `<div class="wf-header">
+        <span class="wf-name">${activeSkill?.name || ''}</span>
+        <span class="wf-uri">${activeSkill?.url || ''}</span>
+      </div>
+      <div class="wf-progress"><div class="wf-progress-fill" style="width:${pct}%"></div></div>`;
+
+      steps.forEach((s, i) => {
+        const st = i < stepIdx ? 'done' : i === stepIdx ? 'current' : '';
+        h += `<div class="step ${st}" id="s${i}">`;
+        h += `<div class="step-top">
+          <span class="step-num">${i < stepIdx ? '\u2713' : i + 1}</span>
+          <span class="step-title">${s.title}${i < stepIdx ? '<span class="step-check">\u2713</span>' : ''}</span>
+        </div>`;
+
+        if (i === stepIdx) {
+          h += `<div class="step-body">${marked.parse(s.md)}`;
+
+          for (const tn of s.tools) {
+            const t = tools.find(x => x.name === tn);
+            if (!t) continue;
+            const props = t.inputSchema?.properties || {};
+            const key = Object.keys(props)[0];
+            const ph = key ? (props[key].description || key) : '';
+            const dv = tn === 'create_branch' ? 'feat/42-demo' : tn === 'run_tests' ? 'all' : '';
+            h += `<div class="tool-panel" id="tp-${i}-${tn}">
+              <span class="tool-name">${tn}</span>
+              ${key ? `<input class="tool-input" id="ti-${i}-${tn}" placeholder="${ph}" value="${dv}">` : ''}
+              <button class="tool-run" onclick="runTool(${i},'${tn}')">Run</button>
+            </div>`;
+          }
+
+          for (const ref of s.refs) {
+            const short = ref.replace('skill://', '');
+            h += `<button class="ref-btn" onclick="loadRef(this,'${ref}')">ref: ${short}</button>
+              <div class="ref-body" data-ref="${ref}"></div>`;
+          }
+
+          h += `<div class="step-nav">`;
+          if (i > 0) h += `<button class="nav-btn" onclick="stepIdx=${i - 1};render()">Back</button>`;
+          h += `<button class="nav-btn primary" onclick="stepIdx=${i + 1};render()">${i === steps.length - 1 ? 'Complete' : 'Next'}</button>`;
+          h += `</div></div>`;
+        }
+
+        h += `</div>`;
+      });
+
+      wf.innerHTML = h;
+      wf.classList.add('visible');
+      setTimeout(() => {
+        const el = document.getElementById('s' + stepIdx);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 60);
+    }
+
+    async function runTool(si, tn) {
+      const panel = document.getElementById(`tp-${si}-${tn}`);
+      const btn = panel.querySelector('.tool-run');
+      const inp = panel.querySelector('.tool-input');
+      panel.querySelector('.tool-result')?.remove();
+      btn.disabled = true;
+      btn.textContent = '...';
+      const t = tools.find(x => x.name === tn);
+      const key = Object.keys(t?.inputSchema?.properties || {})[0];
+      const args = {};
+      if (key && inp) args[key] = inp.value || 'default';
+      try {
+        log('tools/call', `${tn}(${JSON.stringify(args)})`);
+        const r = await post('tool', { name: tn, arguments: args });
+        const txt = r.content?.[0]?.text || JSON.stringify(r);
+        const d = document.createElement('div');
+        d.className = 'tool-result ok'; d.textContent = txt;
+        panel.appendChild(d);
+        log('result', txt);
+        btn.textContent = 'Done';
+      } catch (e) {
+        const d = document.createElement('div');
+        d.className = 'tool-result err'; d.textContent = e.message;
+        panel.appendChild(d);
+        btn.textContent = 'Run'; btn.disabled = false;
+      }
+    }
+
+    async function loadRef(btn, uri) {
+      const body = btn.nextElementSibling;
+      if (body.classList.contains('open')) {
+        body.classList.remove('open');
+        btn.textContent = 'ref: ' + uri.replace('skill://', '');
+        return;
+      }
+      btn.textContent = 'loading...';
+      try {
+        log('resources/read', uri);
+        const r = await api('resource?uri=' + encodeURIComponent(uri));
+        body.innerHTML = marked.parse(r.text || '');
+        body.classList.add('open');
+        btn.textContent = 'close: ' + uri.replace('skill://', '');
+      } catch (e) {
+        body.innerHTML = `<span style="color:var(--danger)">${e.message}</span>`;
+        body.classList.add('open');
+      }
+    }
+
+    async function init() {
+      try {
+        log('resources/read', 'skill://index.json');
+        const idx = await api('index');
+        skills = idx.skills || [];
+        const t = await api('tools');
+        tools = t || [];
+        log('init', `${skills.length} skills, ${tools.length} tools`);
+
+        document.getElementById('statusText').textContent = 'Connected';
+        document.getElementById('skillCount').textContent = skills.length;
+        document.getElementById('toolCount').textContent = tools.length;
+
+        const input = document.getElementById('cmdInput');
+        input.disabled = false;
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+        input.focus();
+      } catch (e) {
+        document.getElementById('statusText').textContent = 'Offline';
+        document.querySelector('.header-dot').style.background = 'var(--danger)';
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+name = "mcpskill"
+main = "src/worker.ts"
+compatibility_date = "2026-07-18"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./public"
