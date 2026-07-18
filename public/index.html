@@ -677,6 +677,79 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--bg-raised); border-radius: 2px; }
 
+    /* ═══ Timeline ═════════════════════════════════════ */
+    .timeline {
+      margin: 28px auto 32px;
+      max-width: 520px;
+      text-align: left;
+    }
+
+    .timeline-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+      margin-bottom: 10px;
+    }
+
+    .tl-item {
+      display: flex;
+      gap: 12px;
+      position: relative;
+      padding-bottom: 14px;
+    }
+
+    .tl-item:last-child { padding-bottom: 0; }
+
+    .tl-rail {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      width: 12px;
+    }
+
+    .tl-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .tl-line {
+      flex: 1;
+      width: 1px;
+      background: var(--border);
+      margin-top: 4px;
+    }
+
+    .tl-item:last-child .tl-line { display: none; }
+
+    .tl-date {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-muted);
+      flex-shrink: 0;
+      width: 72px;
+      padding-top: 2px;
+    }
+
+    .tl-body {
+      font-size: 13px;
+      color: var(--ink-2);
+      line-height: 1.5;
+    }
+
+    .tl-body a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .tl-body a:hover { text-decoration: underline; }
+
     @media (max-width: 540px) {
       .shell { padding: 0 16px 80px; }
       .landing { padding: 40px 0 32px; }
@@ -684,6 +757,7 @@
       .landing-features { flex-direction: column; }
       .tool-panel { flex-direction: column; align-items: stretch; }
       .tool-input { min-width: auto; }
+      .tl-date { width: 62px; font-size: 10px; }
     }
   </style>
 </head>
@@ -732,6 +806,30 @@
         <div class="landing-feat">
           <div class="landing-feat-label">Tools</div>
           <div class="landing-feat-value" id="toolCount">--</div>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-label">Timeline</div>
+        <div class="tl-item">
+          <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div class="tl-date">2025-12-20</div>
+          <div class="tl-body"><a href="https://h3manth.com/scribe/skills-and-mcp-better-together/" target="_blank">Skills and MCP, Better Together</a> — blog post</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div class="tl-date">2025-12-22</div>
+          <div class="tl-body"><a href="https://github.com/agentskills/agentskills/issues/42" target="_blank">RFC: Remote Agent Skills</a> — URL-based Skill Import</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div class="tl-date">2026-02-01</div>
+          <div class="tl-body">Interest Group formed; experimental repo created</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div class="tl-date">2026-04-14</div>
+          <div class="tl-body">Initial charter formalized by MCP via SEP-2149</div>
         </div>
       </div>
 
