@@ -460,6 +460,35 @@ export default {
         return json(result);
       }
 
+      if (path === "/api/classify" && request.method === "POST") {
+        const body = await request.json() as { text: string };
+        const skills = Object.entries(SKILLS)
+          .filter(([p]) => p.endsWith("SKILL.md"))
+          .map(([p, c]) => {
+            const meta = parseFrontmatter(c);
+            return `- "${meta.name}": ${meta.description}`;
+          })
+          .join("\n");
+
+        const aiResp = await fetch("https://ai-proxy.hemanthhm.workers.dev/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "@cf/meta/llama-4-scout-17b-16e-instruct",
+            messages: [
+              { role: "system", content: `You are a skill router. Reply with ONLY the exact skill name. No quotes, no explanation.\n\nSkills:\n${skills}\n\nIf none match, reply "none".` },
+              { role: "user", content: body.text }
+            ],
+            stream: false,
+          }),
+        });
+
+        if (!aiResp.ok) return json({ error: `AI error ${aiResp.status}` }, 502);
+        const aiData = await aiResp.json() as Record<string, unknown>;
+        const result = (aiData as any).result?.response || (aiData as any).response || "";
+        return json({ skill: result.trim().toLowerCase() });
+      }
+
       // Static assets are handled by wrangler's [assets] config
       // This catch-all returns 404 for unknown API paths
       if (path.startsWith("/api/")) {

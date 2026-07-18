@@ -761,9 +761,6 @@
   </div>
 
   <script>
-    const AI_URL = 'https://ai-proxy.hemanthhm.workers.dev';
-    const AI_MODEL = '@cf/meta/llama-4-scout-17b-16e-instruct';
-
     let skills = [], tools = [], activeSkill = null, stepIdx = 0, steps = [];
     let busy = false;
 
@@ -782,22 +779,8 @@
     }
 
     async function classify(text) {
-      const list = skills.map(s => `- "${s.name}": ${s.description}`).join('\n');
-      const r = await fetch(AI_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: AI_MODEL,
-          messages: [
-            { role: 'system', content: `You are a skill router. Reply with ONLY the exact skill name that best matches. No quotes, no explanation.\n\nSkills:\n${list}\n\nIf none match, reply "none".` },
-            { role: 'user', content: text }
-          ],
-          stream: false
-        })
-      });
-      if (!r.ok) throw new Error(`AI ${r.status}`);
-      const d = await r.json();
-      return (d.result?.response || d.response || '').trim().toLowerCase();
+      const r = await post('classify', { text });
+      return r.skill || 'none';
     }
 
     function parse(md) {
