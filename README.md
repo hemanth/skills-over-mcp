@@ -45,7 +45,7 @@ skills/
 npm run deploy
 ```
 
-Deploys to Cloudflare Workers as a self-contained worker with embedded skill content. Live at `https://mcpskill.hemanthhm.workers.dev`.
+Deploys to Cloudflare Workers as a self-contained worker with embedded skill content. Live at `https://mcpskill.h3manth.com`.
 
 ## Architecture
 
